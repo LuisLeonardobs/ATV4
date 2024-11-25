@@ -1,0 +1,25 @@
+{
+  "name": "atv4",
+  "version": "1.0.0",
+  "description": "Atividade PPI 4",
+  "main": "atv4.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "start": "nodemon atv4.js",
+    "type": "git",
+    "url": "git+https://github.com/LuisLeonardobs/ATV4.git"
+  },
+  "author": "Luis Leonardo Barbosa e Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuisLeonardobs/ATV4/issues"
+  },
+  "homepage": "https://github.com/LuisLeonardobs/ATV4#readme",
+  "dependencies": {
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "nodemon": "^3.1.7"
+  }
+}
