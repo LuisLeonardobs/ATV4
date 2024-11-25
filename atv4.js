@@ -32,18 +32,27 @@ app.get('/login', (req, resp) => {
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
                 <style>
                     body {
-                        background-color: #F5F5F5;
+                        background-color: black;
+                        color: white;
                     }
                     .container {
-                        background-color: #A8D08D;
+                        background-color: #8B0000;
                         padding: 20px;
                         border-radius: 8px;
                     }
                     fieldset {
-                        border-color: #B6D7A8;
+                        border: 2px solid red;
                     }
                     legend {
-                        color: #2D572C;
+                        color: white;
+                    }
+                    .btn-red {
+                        background-color: red;
+                        color: white;
+                        border: none;
+                    }
+                    .btn-red:hover {
+                        background-color: darkred;
                     }
                 </style>
             </head>
@@ -57,11 +66,11 @@ app.get('/login', (req, resp) => {
                                 <input type="text" class="form-control" id="usuario" name="usuario" required>
                             </div>
                             <div class="col-md-12">
-                                <label for="senha" class="form-label">Senha</label>
+                                <label for="senha" class="form-label">Senha:</label>
                                 <input type="password" class="form-control" id="senha" name="senha" required>
                             </div>
                             <div class="col-12 mt-2">
-                                <button class="btn btn-primary" type="submit">Login</button>
+                                <button class="btn btn-red" type="submit">Login</button>
                             </div>
                         </fieldset>
                     </form>
@@ -82,7 +91,7 @@ app.post('/login', (req, resp) => {
             <div class="alert alert-danger" role="alert">
                 Usuário ou senha inválidos!
             </div>
-            <a href="/login" class="btn btn-primary">Tentar Novamente</a>
+            <a href="/login" class="btn btn-red">Tentar Novamente</a>
         `);
     }
 });
@@ -104,30 +113,37 @@ app.get('/', verificarAutenticacao, (req, resp) => {
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
                 <style>
                     body {
-                        background-color: #D6E4D2;
+                        background-color: black;
+                        color: white;
                     }
                     .container {
-                        background-color: #A8D08D;
+                        background-color: #8B0000;
                         padding: 20px;
                         border-radius: 8px;
                     }
-                    h1 {
-                        color: #2D572C;
+                    .btn-red {
+                        background-color: red;
+                        color: white;
+                        border: none;
+                    }
+                    .btn-red:hover {
+                        background-color: darkred;
                     }
                 </style>
             </head>
             <body>
                 <div class="container text-center mt-5">
                     <h1>Bem-vindo ao Cadastro de Produtos</h1>
-                    <a class="btn btn-primary m-2" href="/cadastrarProduto">Cadastrar Produto</a>
-                    <a class="btn btn-success m-2" href="/listarProdutos">Ver Produtos Cadastrados</a>
-                    <a class="btn btn-danger m-2" href="/logout">Sair</a>
+                    <a class="btn btn-red m-2" href="/cadastrarProduto">Cadastrar Produto</a>
+                    <a class="btn btn-dark m-2" href="/listarProdutos">Ver Produtos Cadastrados</a>
+                    <a class="btn btn-red m-2" href="/logout">Sair</a>
                 </div>
             </body>
         </html>
     `);
 });
 
+// Cadastro de Produto View
 function cadastroProdutoView(req, resp) {
     resp.send(`
         <html>
@@ -136,18 +152,24 @@ function cadastroProdutoView(req, resp) {
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
                 <style>
                     body {
-                        background-color: #D6E4D2;
+                        background-color: black;
+                        color: white;
                     }
                     .container {
-                        background-color: #A8D08D;
+                        background-color: #8B0000;
                         padding: 20px;
                         border-radius: 8px;
                     }
-                    h1 {
-                        color: #2D572C;
-                    }
                     .form-control {
                         border-radius: 8px;
+                    }
+                    .btn-red {
+                        background-color: red;
+                        color: white;
+                        border: none;
+                    }
+                    .btn-red:hover {
+                        background-color: darkred;
                     }
                 </style>
             </head>
@@ -156,35 +178,35 @@ function cadastroProdutoView(req, resp) {
                     <h1>Cadastro de Produtos</h1>
                     <form method="POST" action="/cadastrarProduto" class="border p-4 row g-3">
                         <div class="col-md-6">
-                            <label for="codigoBarras" class="form-label">Código de Barras</label>
+                            <label for="codigoBarras" class="form-label">Código de Barras:</label>
                             <input type="text" class="form-control" id="codigoBarras" name="codigoBarras" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="descricao" class="form-label">Descrição do Produto</label>
+                            <label for="descricao" class="form-label">Descrição:</label>
                             <input type="text" class="form-control" id="descricao" name="descricao" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="precoCusto" class="form-label">Preço de Custo</label>
+                            <label for="precoCusto" class="form-label">Preço de Custo:</label>
                             <input type="number" step="0.01" class="form-control" id="precoCusto" name="precoCusto" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="precoVenda" class="form-label">Preço de Venda</label>
+                            <label for="precoVenda" class="form-label">Preço de Venda:</label>
                             <input type="number" step="0.01" class="form-control" id="precoVenda" name="precoVenda" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="dataValidade" class="form-label">Data de Validade</label>
+                            <label for="dataValidade" class="form-label">Data de Validade:</label>
                             <input type="date" class="form-control" id="dataValidade" name="dataValidade" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="qtdEstoque" class="form-label">Quantidade em Estoque</label>
+                            <label for="qtdEstoque" class="form-label">Quantidade:</label>
                             <input type="number" class="form-control" id="qtdEstoque" name="qtdEstoque" required>
                         </div>
                         <div class="col-md-12">
-                            <label for="nomeFabricante" class="form-label">Nome do Fabricante</label>
+                            <label for="nomeFabricante" class="form-label">Fabricante:</label>
                             <input type="text" class="form-control" id="nomeFabricante" name="nomeFabricante" required>
                         </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Cadastrar Produto</button>
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-red">Cadastrar Produto</button>
                         </div>
                     </form>
                 </div>
@@ -193,6 +215,7 @@ function cadastroProdutoView(req, resp) {
     `);
 }
 
+// Cadastro e Listagem de Produtos
 function listarProdutosView(req, resp) {
     resp.send(`
         <html>
@@ -201,17 +224,12 @@ function listarProdutosView(req, resp) {
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
                 <style>
                     body {
-                        background-color: #D6E4D2;
+                        background-color: black;
+                        color: white;
                     }
                     .container {
-                        background-color: #A8D08D;
+                        background-color: #8B0000;
                         padding: 20px;
-                        border-radius: 8px;
-                    }
-                    h2 {
-                        color: #2D572C;
-                    }
-                    table {
                         border-radius: 8px;
                     }
                 </style>
@@ -219,15 +237,15 @@ function listarProdutosView(req, resp) {
             <body>
                 <div class="container mt-5">
                     <h2>Produtos Cadastrados</h2>
-                    <table class="table">
+                    <table class="table text-white">
                         <thead>
                             <tr>
-                                <th>Código de Barras</th>
+                                <th>Código</th>
                                 <th>Descrição</th>
-                                <th>Preço de Custo</th>
-                                <th>Preço de Venda</th>
-                                <th>Data de Validade</th>
-                                <th>Quantidade em Estoque</th>
+                                <th>Preço Custo</th>
+                                <th>Preço Venda</th>
+                                <th>Validade</th>
+                                <th>Quantidade</th>
                                 <th>Fabricante</th>
                             </tr>
                         </thead>
@@ -245,8 +263,7 @@ function listarProdutosView(req, resp) {
                             `).join('')}
                         </tbody>
                     </table>
-                    <a class="btn btn-primary" href="/">Voltar ao Início</a>
-                    <a class="btn btn-danger" href="/logout">Sair</a>
+                    <a class="btn btn-dark" href="/">Voltar</a>
                 </div>
             </body>
         </html>
@@ -255,14 +272,11 @@ function listarProdutosView(req, resp) {
 
 function cadastrarProduto(req, resp) {
     const { codigoBarras, descricao, precoCusto, precoVenda, dataValidade, qtdEstoque, nomeFabricante } = req.body;
-
     if (Number(precoCusto) > Number(precoVenda)) {
         return resp.send("Erro: O preço de custo não pode ser maior que o preço de venda!");
     }
-
     const produto = { codigoBarras, descricao, precoCusto, precoVenda, dataValidade, qtdEstoque, nomeFabricante };
     listaProdutos.push(produto);
-
     resp.redirect('/listarProdutos');
 }
 
