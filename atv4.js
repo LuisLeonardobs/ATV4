@@ -1,3 +1,101 @@
+const express = require('express');
+const session = require('express-session');
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(
+    session({
+        secret: 'chave-secreta',
+        resave: false,
+        saveUninitialized: true,
+    })
+);
+
+const porta = 3000;
+const host = '0.0.0.0';
+
+let listaProdutos = [];
+
+function verificarAutenticacao(req, resp, next) {
+    if (req.session.autenticado) {
+        next();
+    } else {
+        resp.redirect('/login');
+    }
+}
+
+app.get('/login', (req, resp) => {
+    resp.send(`
+        <html>
+            <head>
+                <title>Login</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body {
+                        background-color: #F5F5F5;
+                    }
+                    .container {
+                        background-color: #A8D08D;
+                        padding: 20px;
+                        border-radius: 8px;
+                    }
+                    fieldset {
+                        border-color: #B6D7A8;
+                    }
+                    legend {
+                        color: #2D572C;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container w-25 mt-5">
+                    <form action='/login' method='POST' class="row g-3 needs-validation" novalidate>
+                        <fieldset class="border p-2">
+                            <legend class="mb-3">Autenticação do Sistema</legend>
+                            <div class="col-md-12">
+                                <label for="usuario" class="form-label">Usuário:</label>
+                                <input type="text" class="form-control" id="usuario" name="usuario" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="senha" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="senha" name="senha" required>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button class="btn btn-primary" type="submit">Login</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </body>
+        </html>
+    `);
+});
+
+app.post('/login', (req, resp) => {
+    const { usuario, senha } = req.body;
+
+    if (usuario === 'admin' && senha === '123') {
+        req.session.autenticado = true;
+        resp.redirect('/');
+    } else {
+        resp.send(`
+            <div class="alert alert-danger" role="alert">
+                Usuário ou senha inválidos!
+            </div>
+            <a href="/login" class="btn btn-primary">Tentar Novamente</a>
+        `);
+    }
+});
+
+app.get('/logout', (req, resp) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erro ao destruir a sessão:', err);
+        }
+        resp.redirect('/login');
+    });
+});
+
 app.get('/', verificarAutenticacao, (req, resp) => {
     resp.send(`
         <html>
@@ -6,72 +104,63 @@ app.get('/', verificarAutenticacao, (req, resp) => {
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
                 <style>
                     body {
-                        background-color: white;
-                        color: black;
-                    }
-                    .navbar {
-                        background-color: black;
-                    }
-                    .navbar-brand, .nav-link {
-                        color: white !important;
-                    }
-                    .btn-red {
-                        background-color: red;
-                        color: white;
-                        border: none;
-                    }
-                    .btn-red:hover {
-                        background-color: darkred;
+                        background-color: #D6E4D2;
                     }
                     .container {
-                        margin-top: 80px;
-                    }
-                    .form-container {
-                        background-color: black;
+                        background-color: #A8D08D;
                         padding: 20px;
                         border-radius: 8px;
-                        color: white;
                     }
-                    input, label {
-                        color: black;
+                    h1 {
+                        color: #2D572C;
                     }
                 </style>
             </head>
             <body>
-                <nav class="navbar navbar-expand-lg fixed-top">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="/">Meu Sistema</a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav me-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/cadastrarProduto">Cadastrar Produto</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/listarProdutos">Produtos</a>
-                                </li>
-                            </ul>
-                            <a class="btn btn-red" href="/logout">Sair</a>
-                        </div>
-                    </div>
-                </nav>
-                <div class="container text-center">
-                    <h1 class="mt-5">Bem-vindo ao Sistema</h1>
-                    <p class="mt-3">Gerencie seus produtos de forma simples e eficiente.</p>
-                    <a class="btn btn-red m-2" href="/cadastrarProduto">Cadastrar Produto</a>
-                    <a class="btn btn-dark m-2" href="/listarProdutos">Ver Produtos</a>
+                <div class="container text-center mt-5">
+                    <h1>Bem-vindo ao Cadastro de Produtos</h1>
+                    <a class="btn btn-primary m-2" href="/cadastrarProduto">Cadastrar Produto</a>
+                    <a class="btn btn-success m-2" href="/listarProdutos">Ver Produtos Cadastrados</a>
+                    <a class="btn btn-danger m-2" href="/logout">Sair</a>
                 </div>
-                <div class="container form-container mt-5">
-                    <h2>Cadastro de Produto</h2>
-                    <form method="POST" action="/cadastrarProduto" class="row g-3">
+            </body>
+        </html>
+    `);
+});
+
+function cadastroProdutoView(req, resp) {
+    resp.send(`
+        <html>
+            <head>
+                <title>Cadastro de Produtos</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body {
+                        background-color: #D6E4D2;
+                    }
+                    .container {
+                        background-color: #A8D08D;
+                        padding: 20px;
+                        border-radius: 8px;
+                    }
+                    h1 {
+                        color: #2D572C;
+                    }
+                    .form-control {
+                        border-radius: 8px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container mt-5">
+                    <h1>Cadastro de Produtos</h1>
+                    <form method="POST" action="/cadastrarProduto" class="border p-4 row g-3">
                         <div class="col-md-6">
                             <label for="codigoBarras" class="form-label">Código de Barras</label>
                             <input type="text" class="form-control" id="codigoBarras" name="codigoBarras" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="descricao" class="form-label">Descrição</label>
+                            <label for="descricao" class="form-label">Descrição do Produto</label>
                             <input type="text" class="form-control" id="descricao" name="descricao" required>
                         </div>
                         <div class="col-md-6">
@@ -91,15 +180,96 @@ app.get('/', verificarAutenticacao, (req, resp) => {
                             <input type="number" class="form-control" id="qtdEstoque" name="qtdEstoque" required>
                         </div>
                         <div class="col-md-12">
-                            <label for="nomeFabricante" class="form-label">Fabricante</label>
+                            <label for="nomeFabricante" class="form-label">Nome do Fabricante</label>
                             <input type="text" class="form-control" id="nomeFabricante" name="nomeFabricante" required>
                         </div>
-                        <div class="col-12 mt-3">
-                            <button type="submit" class="btn btn-red">Cadastrar Produto</button>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Cadastrar Produto</button>
                         </div>
                     </form>
                 </div>
             </body>
         </html>
     `);
+}
+
+function listarProdutosView(req, resp) {
+    resp.send(`
+        <html>
+            <head>
+                <title>Lista de Produtos</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body {
+                        background-color: #D6E4D2;
+                    }
+                    .container {
+                        background-color: #A8D08D;
+                        padding: 20px;
+                        border-radius: 8px;
+                    }
+                    h2 {
+                        color: #2D572C;
+                    }
+                    table {
+                        border-radius: 8px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container mt-5">
+                    <h2>Produtos Cadastrados</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Código de Barras</th>
+                                <th>Descrição</th>
+                                <th>Preço de Custo</th>
+                                <th>Preço de Venda</th>
+                                <th>Data de Validade</th>
+                                <th>Quantidade em Estoque</th>
+                                <th>Fabricante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${listaProdutos.map(produto => `
+                                <tr>
+                                    <td>${produto.codigoBarras}</td>
+                                    <td>${produto.descricao}</td>
+                                    <td>R$ ${produto.precoCusto}</td>
+                                    <td>R$ ${produto.precoVenda}</td>
+                                    <td>${produto.dataValidade}</td>
+                                    <td>${produto.qtdEstoque}</td>
+                                    <td>${produto.nomeFabricante}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <a class="btn btn-primary" href="/">Voltar ao Início</a>
+                    <a class="btn btn-danger" href="/logout">Sair</a>
+                </div>
+            </body>
+        </html>
+    `);
+}
+
+function cadastrarProduto(req, resp) {
+    const { codigoBarras, descricao, precoCusto, precoVenda, dataValidade, qtdEstoque, nomeFabricante } = req.body;
+
+    if (Number(precoCusto) > Number(precoVenda)) {
+        return resp.send("Erro: O preço de custo não pode ser maior que o preço de venda!");
+    }
+
+    const produto = { codigoBarras, descricao, precoCusto, precoVenda, dataValidade, qtdEstoque, nomeFabricante };
+    listaProdutos.push(produto);
+
+    resp.redirect('/listarProdutos');
+}
+
+app.get('/cadastrarProduto', verificarAutenticacao, cadastroProdutoView);
+app.get('/listarProdutos', verificarAutenticacao, listarProdutosView);
+app.post('/cadastrarProduto', verificarAutenticacao, cadastrarProduto);
+
+app.listen(porta, host, () => {
+    console.log(`Servidor rodando em http://${host}:${porta}`);
 });

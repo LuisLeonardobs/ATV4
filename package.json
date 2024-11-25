@@ -4,10 +4,10 @@
   "description": "Atividade PPI 4",
   "main": "atv4.js",
   "scripts": {
+    "start": "nodemon atv4.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "start": "nodemon atv4.js",
     "type": "git",
     "url": "git+https://github.com/LuisLeonardobs/ATV4.git"
   },
